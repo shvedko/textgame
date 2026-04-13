@@ -3,9 +3,16 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"gopkg.in/yaml.v3"
+	"log"
 	"os"
 
-	"github.com/pshvedko/textgame/student"
+	"github.com/pshvedko/textgame/engine"
+
+	_ "github.com/pshvedko/textgame/location/corridor"
+	_ "github.com/pshvedko/textgame/location/kitchen"
+	_ "github.com/pshvedko/textgame/location/room"
+	_ "github.com/pshvedko/textgame/location/street"
 )
 
 func main() {
@@ -30,9 +37,21 @@ func main() {
 func initGame() {
 	/*
 		эта функция инициализирует игровой мир - все локации
-		если что-то было - оно корректно перезатирается
+		если что-то было - оно корректно перезаписывается
 	*/
-	g = student.New()
+	file, err := os.Open("config.yaml")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var cfg engine.Config
+	err = yaml.NewDecoder(file).Decode(&cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	game, err = cfg.NewGame()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func handleCommand(command string) string {
@@ -40,11 +59,11 @@ func handleCommand(command string) string {
 		данная функция принимает команду от "пользователя"
 		и наверняка вызывает какой-то другой метод или функцию у "мира" - списка комнат
 	*/
-	return g.HandleCommand(command)
+	return game.HandleCommand(command)
 }
 
 type Game interface {
 	HandleCommand(string) string
 }
 
-var g Game
+var game Game
