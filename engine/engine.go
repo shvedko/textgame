@@ -99,7 +99,7 @@ type Config struct {
 	} `yaml:"locations"`
 }
 
-func (c Config) NewGame() (*Game, error) {
+func New(c Config) (*Game, error) {
 	locations := map[string]Location{}
 	for _, location := range c.Locations {
 		factory, ok := Registry[location.Name]

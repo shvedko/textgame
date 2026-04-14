@@ -48,7 +48,7 @@ func initGame() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	game, err = cfg.NewGame()
+	game, err = engine.New(cfg)
 	if err != nil {
 		log.Fatal(err)
 	}

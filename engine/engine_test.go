@@ -75,7 +75,7 @@ func TestGame_HandleCommand(t *testing.T) {
 		From: "кухня",
 	}
 	for num, steps := range cases {
-		game, _ := cfg.NewGame()
+		game, _ := engine.New(cfg)
 		for id, step := range steps {
 			answer := game.HandleCommand(step.command)
 			if answer != step.answer {
